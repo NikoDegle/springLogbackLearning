@@ -1,0 +1,14 @@
+创建logback配置文件 logback.xml
+该文件可以位于resources下
+
+logback配置文件加载顺序 从上至下
+    运行的时候通过java -Dlogback.configurationFile=xxxx/xxx.xml的方式指定文件
+    自动加载resources下的logback.groovy
+    自动加载classpath下的logback-test.xml
+    自动加载classpath下的logback.xml文件
+
+
+三个主要标签
+logger: 日志记录器，用于存放日志对象，定义日志的类型和级别等
+appender: 用于指定日志的输出对象，可以是控制台，文件或者套接字服务器
+layout: 用于格式化日志输出内容

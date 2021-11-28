@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 参数解释
+    scan: 配置文件发生了改变是否自动修改
+    scanPeriod: 扫描配置文件时间间隔 默认单位毫秒
+    debug: 是否打印logback自己的运行信息
+ -->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <!-- 定义日志输出位置 -->
+    <property name="log.filePath" value="E:\\java\\javaworkspace\\logs\\spring-logback-learning" />
+    <!-- 定义日志输出格式
+        thread 日志线程名称
+        %-5 五个空格 level 日志级别
+        %logger{32} 显示在哪个类中记录的日志 只显示全类名的32个字符
+        %msg 日志消息内容 %n 换行
+    -->
+    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{32} - %msg%n" />
+
+    <!-- 定义日志输出位置
+        name: 输出对象
+        class： 使用的日志输出类 这里使用的控制台输出
+     -->
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender" >
+        <!-- 使用我们之前配置好的日志输出格式 -->
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 定义debug级别的日志输出
+        RollingFileAppender: 滚动日志 可以按照天或月生成不同的日志文件
+     -->
+    <appender name="debugAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 定义文件路径
+            file: 具体的当前记录的log文件名
+            rollingPolicy: 滚动方式，需要用对应的class
+                fileNamePattern: logback压缩的日志文件名格式
+                                 如果不压缩文件 去掉最后的.gz就可以了 当前设置为每小时打包一次
+                maxHistory: 最大日志压缩文件保存数量 之前的日志会被删除 这里设置保留24份
+         -->
+        <file>${log.filePath}/debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.filePath}/debug-%d{yyyy-MM-dd_HH}.log.gz</fileNamePattern>
+            <maxHistory>24</maxHistory>
+        </rollingPolicy>
+        <!-- 定义日志输出格式 -->
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+
+        <!-- 定义日志过滤级别 当前级别为debug 在此之下的trace级别的日志不会被记录
+            level: 日志记录级别
+            onMatch: 如果符合级别执行的动作
+            onMismatch: 如果不符合级别执行的动作
+            动作类别: accept记录日志 deny忽略日志
+         -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- info级别的日志记录器 -->
+    <appender name="infoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.filePath}/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.filePath}/info-%d{yyyy-MM-dd_HH}.log.gz</fileNamePattern>
+            <maxHistory>24</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- error级别的日志记录器 -->
+    <appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.filePath}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.filePath}/error-%d{yyyy-MM-dd_HH}.log.gz</fileNamePattern>
+            <maxHistory>24</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- 根日志记录器，记录所有日志，输出至对应的consoleAppender -->
+    <root level="DEBUG">
+        <appender-ref ref="consoleAppender" />
+    </root>
+
+    <!-- 配置我们自己的代码日志记录
+        name: 记录该包名下的所有日志
+        level: 记录的日志等级
+        additivity: 是否按照我们自定义的appender输出
+     -->
+    <logger name="mine.practice.logbackdemo" level="DEBUG" additivity="true">
+        <appender-ref ref="debugAppender"/>
+        <appender-ref ref="infoAppender"/>
+        <appender-ref ref="errorAppender"/>
+    </logger>
+
+</configuration>

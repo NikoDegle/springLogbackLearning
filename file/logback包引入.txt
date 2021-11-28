@@ -1,0 +1,8 @@
+logback主要包
+    groupId: ch.qos.logback
+    artifactId: logback-classic
+    可以配置scope 参数为runtime
+
+    groupId: org.slf4j
+    artifactId: slf4j-api
+

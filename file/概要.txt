@@ -1,0 +1,12 @@
+logback是一个日志记录插件，实现了slf4j日志标准接口
+
+logback分为logback-core, logback-classic, logback-access三个模块
+其中logback-core是logback核心模块
+logback-classic可以视为log4j的升级版本，也支持log4j的使用方式
+logback-access支持了部分servlet容器的日志记录，如tomcat或者jetty等
+
+logback日志级别
+trace < debug < info < warn < error
+
+配置文件位于resources/logback.xml
+实际使用位于controller/HelloController.java
